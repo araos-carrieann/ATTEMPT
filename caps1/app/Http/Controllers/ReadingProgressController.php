@@ -53,7 +53,7 @@ class ReadingProgressController extends Controller
         );
 
         return response()->json(['success' => true]);
-    }
+    }  
 
     /**
      * Clear all saved page data for the authenticated user.
