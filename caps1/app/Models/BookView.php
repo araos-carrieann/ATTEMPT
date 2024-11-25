@@ -18,4 +18,12 @@ class BookView extends Model
         'program',
         'timestamp',
     ];
+
+      /**
+     * Get the eBook associated with the book view.
+     */
+    public function ebook()
+    {
+        return $this->belongsTo(eBooks::class, 'e_book_id');
+    }
 }

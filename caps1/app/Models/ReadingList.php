@@ -37,4 +37,9 @@ class ReadingList extends Model
     {
         return $this->belongsTo(eBooks::class);
     }
+
+    public function subcategories()
+    {
+        return $this->belongsToMany(Subcategory::class); // assuming many-to-many relationship
+    }
 }

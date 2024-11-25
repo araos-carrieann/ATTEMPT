@@ -567,7 +567,7 @@
     user-select: none;
   }
   .carousel :where(.card) {
-    display: flex;
+  
     justify-content: center;
     align-items: center;
   }

@@ -14,65 +14,61 @@
             </div>
         </div>
     </div>
-
-    {{-- For Reading List --}}
     @if (request()->routeIs('userDashboard'))
         <section class="filter">
             <div class="book-grid-container">
                 <div class="book-collections">
                     <h4>Books</h4>
                     <div class="books">
-                        <div class="book-card">
-                            @foreach ($ebookList as $ebook)
-                                <div class="book-card">
-                                    <div class="img">
-                                        <a href="book-detail.html"><img src="{{ Storage::url($ebook->book_cover) }}"
-                                                alt="" /></a>
-                                        <button class="reading-list" id="listbtn" data-id="{{ $ebook->id }}">
-                                            <i class="fa-regular fa-bookmark"></i>
-                                        </button>
-                                    </div>
-                                    <h5>{{ $ebook->title }}</h5>
-                                    @if ($ebook->subcategories->isNotEmpty())
-                                        <small>{{ $ebook->subcategories->first()->name }}</small>
-                                    @endif
+                        @foreach ($ebookList as $ebook)
+                            <div class="book-card">
+                                <div class="img">
+                                    <a href="book-detail.html"><img src="{{ Storage::url($ebook->book_cover) }}"
+                                            alt="" /></a>
+                                    <button class="reading-list" id="listbtn" data-id="{{ $ebook->id }}">
+                                        <i class="fa-regular fa-bookmark"></i>
+                                    </button>
                                 </div>
-                            @endforeach
-                        </div>
+                                <h5>{{ $ebook->title }}</h5>
+                                @if ($ebook->subcategories->isNotEmpty())
+                                    <small>{{ $ebook->subcategories->first()->name }}</small>
+                                @endif
+                            </div>
+                        @endforeach
                     </div>
                 </div>
+            </div>
             </div>
         </section>
     @endif
 
     {{-- For Favorites --}}
     @if (request()->routeIs('userFavorite'))
-        <section class="filter">
-            <div class="book-grid-container">
-                <div class="book-collections">
-                    <h4>Favorites</h4>
-                    <div class="books">
+    <section class="filter">
+        <div class="book-grid-container">
+            <div class="book-collections">
+                <h4>Books</h4>
+                <div class="books">
+                    @foreach ($favList as $ebook)
                         <div class="book-card">
-                            @foreach ($favList as $ebook)
-                                <div class="book-card">
-                                    <div class="img">
-                                        <a href="book-detail.html"><img src="{{ Storage::url($ebook->book_cover) }}"
-                                                alt="" /></a>
-                                        <button class="liked" id="likebtn" data-id="{{ $ebook->id }}">
-                                            <i class="fa-regular fa-heart"></i>
-                                        </button>
-                                    </div>
-                                    <h5>{{ $ebook->title }}</h5>
-                                    @if ($ebook->subcategories->isNotEmpty())
-                                        <small>{{ $ebook->subcategories->first()->name }}</small>
-                                    @endif
-                                </div>
-                            @endforeach
+                            <div class="img">
+                                <a href="book-detail.html"><img src="{{ Storage::url($ebook->book_cover) }}"
+                                        alt="" /></a>
+                                <button class="reading-list" id="listbtn" data-id="{{ $ebook->id }}">
+                                    <i class="fa-regular fa-bookmark"></i>
+                                </button>
+                            </div>
+                            <h5>{{ $ebook->title }}</h5>
+                            @if ($ebook->subcategories->isNotEmpty())
+                                <small>{{ $ebook->subcategories->first()->name }}</small>
+                            @endif
                         </div>
-                    </div>
+                    @endforeach
                 </div>
             </div>
-        </section>
+        </div>
+        </div>
+    </section>
     @endif
 
 
@@ -107,44 +103,43 @@
         });
 
 
-       // Reading List button functionality
-document.querySelectorAll(".reading-list").forEach((listButton) => {
-    let eBookId = listButton.dataset.id;
+        // Reading List button functionality
+        document.querySelectorAll(".reading-list").forEach((listButton) => {
+            let eBookId = listButton.dataset.id;
 
-    // Check if the eBook is already in the reading list when the page loads
-    fetch(`/reading-list/status/${eBookId}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.isAddedToList) {
-                listButton.classList.add("in-list"); // Add "in-list" UI feedback
-            }
-        })
-        .catch(error => console.error("Error:", error));
+            // Check if the eBook is already in the reading list when the page loads
+            fetch(`/reading-list/status/${eBookId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.isAddedToList) {
+                        listButton.classList.add("in-list"); // Add "in-list" UI feedback
+                    }
+                })
+                .catch(error => console.error("Error:", error));
 
-    // Click event to add/remove from reading list
-    listButton.addEventListener("click", () => {
-        listButton.classList.toggle("in-list"); // Toggle "in-list" UI feedback
+            // Click event to add/remove from reading list
+            listButton.addEventListener("click", () => {
+                listButton.classList.toggle("in-list"); // Toggle "in-list" UI feedback
 
-        const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-        fetch(`/reading-list/${eBookId}`, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': token,
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then(response => {
-                if (response.ok) {
-                    window.location.reload();
-                    console.log("Updated reading list!");
-                } else {
-                    return Promise.reject("Failed to update");
-                }
-            })
-            .catch(error => console.error("Error:", error));
-    });
-});
-
+                fetch(`/reading-list/${eBookId}`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': token,
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            window.location.reload();
+                            console.log("Updated reading list!");
+                        } else {
+                            return Promise.reject("Failed to update");
+                        }
+                    })
+                    .catch(error => console.error("Error:", error));
+            });
+        });
     </script>
 </x-app-layout>

@@ -406,9 +406,9 @@ input[type="range"]::-moz-range-thumb {
 
 /* input bg #f1effd */
 
-.active {
+/* .active {
     transform: rotate(-180deg);
-}
+} */
 
 /* #f0f0f0 */
 .filter .book-grid-container {
@@ -463,6 +463,10 @@ input[type="range"]::-moz-range-thumb {
 
 .filter .book-collections .books .img {
     position: relative;
+}
+
+.img {
+    max-width: max-content;
 }
 
 .filter .book-collections .books .img img {
@@ -586,8 +590,7 @@ input[type="range"]::-moz-range-thumb {
 }
 
 .book-overview .img img {
-    width: 2600px;
-    height: 400px;
+    width: 250px;
     border-radius: 10px;
 }
 
@@ -611,7 +614,7 @@ input[type="range"]::-moz-range-thumb {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 1rem;
+    gap: 2rem;
 }
 
 .book-overview .book-content .meta .rating {
@@ -630,14 +633,14 @@ input[type="range"]::-moz-range-thumb {
     display: flex;
     align-items: center;
     gap: 0.3rem;
-    font-size: 12px;
+    font-size: 15px;
     font-weight: 500;
 }
 
 .book-content .meta .comment-like {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 1rem;
 }
 
 .book-overview .book-content .meta .comment-like img {
@@ -1630,7 +1633,7 @@ table .heading {
     margin-top: 3rem;
 }
 
-@media only screen and (max-width: 394px) {
+@media only screen and (max-width: 500px) {
     .book-info .related-book .book-container {
         flex-direction: column !important;
     }
@@ -1640,7 +1643,7 @@ table .heading {
     }
 }
 
-@media only screen and (max-width: 422px) {
+@media only screen and (max-width: 670px) {
     .book-info {
         padding: 0px 10px;
     }

@@ -77,9 +77,8 @@ Route::get('/select-interests', [EbooksController::class, 'showInterestForm'])->
 Route::post('/save-last-read-page', [ReadingProgressController::class, 'store'])
     ->middleware('auth');
 
-Route::get('/get-page', [ReadingProgressController::class, 'getPage']);
-Route::post('/save-page', [ReadingProgressController::class, 'savePage']);
-Route::post('/clear-page-data', [ReadingProgressController::class, 'clearPageData']);
+    Route::post('/reading-progress', [ReadingProgressController::class, 'store'])->middleware('auth');
+    Route::get('/reading-progress/{eBookId}', [ReadingProgressController::class, 'getProgress'])->middleware('auth');
 
 
 Route::post('/ebooks/favorite/{id}', [FavoritesController::class, 'addToFavorites'])->name('ebooks.favorite');
@@ -95,5 +94,7 @@ Route::view('dashboard', 'dashboard')
 Route::view('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');
-
+    Route::get('/login', function () {
+        return redirect()->route('welcome'); 
+    });
 require __DIR__ . '/auth.php';

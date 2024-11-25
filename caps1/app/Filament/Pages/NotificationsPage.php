@@ -2,11 +2,12 @@
 
 namespace App\Filament\Pages;
 
+use App\Mail\RegisterMail;
 use App\Models\Notification;
 use App\Models\User;
 use Filament\Pages\Page;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Mail;
 
 class NotificationsPage extends Page
 {
@@ -35,11 +36,21 @@ class NotificationsPage extends Page
         // Decode the notification data to access registration_data
         $notificationData = $notification->data;
 
-        // Extract the student_id from the registration_data
+        // Extract the email from the registration_data
+        $email = $notificationData['registration_data']['email'];
+
+        // Extract the email from the registration_data
+        $usrname = $notificationData['registration_data']['username'];
+
+        //extract the student_id too
         $studentId = $notificationData['registration_data']['student_id'];
+
 
         // Example: Retrieve the user with this student_id
         $newAccountData = User::where('student_id', $studentId)->update(['status' => 'active']);
+
+        // Send an email to the extracted email address
+        Mail::to($email)->send(new RegisterMail(['usrname' => $usrname]));
 
         // Mark the notification as read
         $notification->delete();

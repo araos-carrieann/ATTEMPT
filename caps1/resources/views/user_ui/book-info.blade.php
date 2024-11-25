@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Book Detail Page</title>
     @vite(['resources/css/app.css', 'resources/css/style.css', 'resources/css/book-filter.css', 'resources/js/app.js', 'resources/js/back-to-top.js', 'resources/js/increment-decrement.js', 'resources/js/jquery.counterup.min.js', 'resources/js/repeat-js.js', 'resources/js/script.js'])
-
+    <link rel="icon" type="image/png" href="/images/final_logo.png" sizes="48x48">
     <!--- google font link-->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -17,19 +17,6 @@
         rel="stylesheet" />
     <!-- Fontawesome Link for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <link rel="apple-touch-icon" sizes="57x57" href="../favicon/apple-icon-57x57.png">
-    <link rel="apple-touch-icon" sizes="60x60" href="../favicon/apple-icon-60x60.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="../favicon/apple-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="76x76" href="../favicon/apple-icon-76x76.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="../favicon/apple-icon-114x114.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="../favicon/apple-icon-120x120.png">
-    <link rel="apple-touch-icon" sizes="144x144" href="../favicon/apple-icon-144x144.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="../favicon/apple-icon-152x152.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="../favicon/apple-icon-180x180.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="../favicon/android-icon-192x192.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="../favicon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="96x96" href="../favicon/favicon-96x96.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="../favicon/favicon-16x16.png">
     <link rel="manifest" href="../favicon/manifest.json">
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
@@ -123,7 +110,7 @@
             margin-top: 20px;
         }
 
-        .review {
+        .reviews {
             border: 1px solid #ccc;
             padding: 10px;
             margin-bottom: 10px;
@@ -158,38 +145,43 @@
 
 <body>
     <header>
-        <nav class="navbar" style="background-color: #f0daa7;">
+        <nav class="navbar" style="background-color: #f0daa7 ;">
             <div class="logo">
-                <div class="img">
-                    <img src="/images/logo1.png" alt="Library Logo" />
-                </div>
-                <div class="logo-header">
-                    <h4><a href="welcome.blade.php">LIBRARY</a></h4>
-                    <small>PUP UNISAN CAMPUS</small>
-                </div>
+                <a href="{{ url('/') }}">
+                    <div class="img">
+                        <img src="/images/final_logo.png" alt="" />
+                    </div>
+                    <div class="logo-header">
+                        <h4>LIBRARY
+                </a></h4>
+                <small>PUP UNISAN CAMPUS</small>
+            </div>
             </div>
             <ul class="nav-list">
-                <li>
-                    <div class="logo">
-                        <div class="title">
-                            <div class="img">
-                                <img src="images/logo.png" alt="Library Logo" />
-                            </div>
-                            <div class="logo-header">
-                                <h4><a href="index.html">LIBRARY</a></h4>
-                                <small>PUP UNISAN CAMPUS</small>
-                            </div>
+                <div class="logo">
+                    <div class="title">
+                        <div class="img">
+                            <img src="images/final_logo.png" alt="" />
                         </div>
-                        <button class="close"><i class="fa-solid fa-xmark"></i></button>
+                        <div class="logo-header">
+                            <h4><a href="index.html">LIBRARY</a></h4>
+                            <small>PUP UNISAN CAMPUS</small>
+                        </div>
                     </div>
-                </li>
+                    <button class="close"><i class="fa-solid fa-xmark"></i></button>
+                </div>
                 <li><a href="welcome.blade.php">Home</a></li>
-                <li><a href="pages/service.html">Service</a></li>
-                <li><a href="pages/contact.html">Contact</a></li>
-                <li><a href="Pages/book-filter.html">Books</a></li>
                 <livewire:welcome.navigation />
+                <x-modal name="login-modal" :show="$errors->isNotEmpty()" maxWidth="sm" focusable>
+                    <div>
+                        <div class="bg-white p-6 rounded-lg shadow-lg w-full">
+                            <livewire:pages.auth.login />
+                        </div>
+                    </div>
+                </x-modal>
             </ul>
             <div class="hamburger">
+                <div class="line"></div>
                 <div class="line"></div>
                 <div class="line"></div>
             </div>
@@ -206,7 +198,7 @@
 
     <section class="book-overview">
         <div class="img">
-            <img src="{{ Storage::url($ebook_data->book_cover) }}" />
+            <img class="img" src="{{ Storage::url($ebook_data->book_cover) }}" />
         </div>
 
         <div class="book-content">
@@ -232,16 +224,12 @@
 
                     </div>
                     <div class="comment-like">
-                        <small><img src="../images/comment.png" alt="" /> <span>{{ $number_of_reviews }}
+                        <small><i class="fa-solid fa-comments" style="color: #800000;"></i></i>
+                            <span>{{ $number_of_reviews }}
                                 Reviews</span></small>
-                        <small><img src="../images/like.png" alt="" /> <span>456k Likes</span></small>
+                        <small><i class="fa-solid fa-heart" style="color: #800000;"></i>
+                            <span>{{ $number_of_favorites }} Likes</span></small>
                     </div>
-                </div>
-                <div class="social-btn">
-                    <a href=""><i class="fa-brands fa-facebook-f"></i>Facebook</a>
-                    <a href=""><i class="fa-brands fa-twitter"></i>Twitter</a>
-                    <a href=""><i class="fa-brands fa-whatsapp"></i>Whatsapp</a>
-                    <a href=""><i class="fa-regular fa-envelope"></i>Email</a>
                 </div>
             </div>
             <p>
@@ -293,10 +281,7 @@
                             <i class="fa-solid fa-book-open"></i>
                             {{ __('Read') }}
                         </x-danger-button>
-
-
                     @endauth
-
                 </div>
             </div>
         </div>
@@ -356,9 +341,7 @@ $displayName = $names['en'] ?? 'Unknown';
             <div class="customer-review tabcontent" id="customer">
                 <div class="rating">
                     <div class="rating-info">
-                        <h5>Rating Information</h5>
-                        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. In dolore, repudiandae sint omnis
-                            ipsum quae doloribus reprehenderit saepe veniam repellat.</p>
+                        <h5>Ratings</h5>
                     </div>
                     <div class="star">
                         <small><span>4.7</span>out of 5</small>
@@ -374,7 +357,7 @@ $displayName = $names['en'] ?? 'Unknown';
                 <strong>Showing 4 of 20 reviews</strong>
                 @foreach ($ebook_reviews as $review)
                     <div class="reviewer-container">
-                        <div class="review">
+                        <div class="reviews">
                             <div class="img-detail">
                                 <img src="../images/man1.png" alt="">
                                 <div class="name">
@@ -435,141 +418,39 @@ $displayName = $names['en'] ?? 'Unknown';
         </div>
     </section>
 
-    <section class="book-set">
-        <div class="heading">
-            <h4>Books On Sale</h4>
-            <div class="arrowbtn">
-                <i id="left" class="fa-solid fa-angle-left"></i>
-                <i id="right" class="fa-solid fa-angle-right"></i>
-            </div>
-        </div>
-        <div class="book-container">
-            <div class="wrapper">
-                <ul class="carousel">
-                    <li class="card">
-                        <div class="img">
-                            <img src="../images/book-1.jpg" alt="" />
-                            <span class="badge">50%</span>
-                        </div>
-                        <h5>The Giver</h5>
-                        <div class="genre">
-                            <span>adventure,</span><span>survival</span>
-                        </div>
-                        <div class="footer">
-                            <span class="star"><i class="fa fa-star"></i> 4.7</span>
-                            <div class="price">
-                                <span>$45.4</span>
-                                <span><strike>$90.4</strike></span>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="card">
-                        <div class="img">
-                            <img src="../images/book-2.jpg" alt="" />
-                            <span class="badge">50%</span>
-                        </div>
-                        <h5>The Wright ...</h5>
-                        <div class="genre">
-                            <span>adventure,</span><span>survival</span>
-                        </div>
-                        <div class="footer">
-                            <span class="star"><i class="fa fa-star"></i> 4.7</span>
-                            <div class="price">
-                                <span>$45.4</span>
-                                <span><strike>$90.4</strike></span>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="card">
-                        <div class="img">
-                            <img src="../images/book-9.jpg" alt="" />
-                            <span class="badge">50%</span>
-                        </div>
-                        <h5>The Ruins Of...</h5>
-                        <div class="genre">
-                            <span>adventure,</span><span>survival</span>
-                        </div>
-                        <div class="footer">
-                            <span class="star"><i class="fa fa-star"></i> 4.7</span>
-                            <div class="price">
-                                <span>$45.4</span>
-                                <span><strike>$90.4</strike></span>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="card">
-                        <div class="img">
-                            <img src="../images/book-10.jpg" alt="" />
-                            <span class="badge">50%</span>
-                        </div>
-                        <h5>Percy Jackson</h5>
-                        <div class="genre">
-                            <span>adventure,</span><span>survival</span>
-                        </div>
-                        <div class="footer">
-                            <span class="star"><i class="fa fa-star"></i> 4.7</span>
-                            <div class="price">
-                                <span>$45.4</span>
-                                <span><strike>$90.4</strike></span>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="card">
-                        <div class="img">
-                            <img src="../images/book-5.jpg" alt="" />
-                            <span class="badge">50%</span>
-                        </div>
-                        <h5>To kill a...</h5>
-                        <div class="genre">
-                            <span>adventure,</span><span>survival</span>
-                        </div>
-                        <div class="footer">
-                            <span class="star"><i class="fa fa-star"></i> 4.7</span>
-                            <div class="price">
-                                <span>$45.4</span>
-                                <span><strike>$90.4</strike></span>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="card">
-                        <div class="img">
-                            <img src="../images/book-6.jpg" alt="" />
-                            <span class="badge">50%</span>
-                        </div>
-                        <h5>Horry Potter</h5>
-                        <div class="genre">
-                            <span>adventure,</span><span>survival</span>
-                        </div>
-                        <div class="footer">
-                            <span class="star"><i class="fa fa-star"></i> 4.7</span>
-                            <div class="price">
-                                <span>$45.4</span>
-                                <span><strike>$90.4</strike></span>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="card">
-                        <div class="img">
-                            <img src="../images/book-7.jpg" alt="" />
-                            <span class="badge">50%</span>
-                        </div>
-                        <h5>Heroes of ...</h5>
-                        <div class="genre">
-                            <span>adventure,</span><span>survival</span>
-                        </div>
-                        <div class="footer">
-                            <span class="star"><i class="fa fa-star"></i> 4.7</span>
-                            <div class="price">
-                                <span>$45.4</span>
-                                <span><strike>$90.4</strike></span>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </section>
 
+    @if ($recommInBookInfo->isNotEmpty()))
+        <section class="book-set">
+            <div class="heading">
+                <h4>Books Recommended</h4>
+                <div class="arrowbtn">
+                    <i id="left" class="fa-solid fa-angle-left"></i>
+                    <i id="right" class="fa-solid fa-angle-right"></i>
+                </div>
+            </div>
+            <div class="book-container">
+                <div class="wrapper">
+                    <ul class="carousel">
+                        @foreach ($recommInBookInfo as $ebook)
+                            <li class="card">
+                                <div class="img">
+                                    <img src="{{ Storage::url($ebook->book_cover) }}" />
+
+                                </div>
+                                <h5>{{ $ebook->title }}</h5>
+                                <div class="genre">
+                                    @if ($ebook->subcategories->isNotEmpty())
+                                        <span>{{ $ebook->subcategories->first()->name }}</span>
+                                    @endif
+                                </div>
+
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+        </section>
+    @endif
     <section class="service">
         <div class="service-container">
             <div class="service-card">
@@ -629,61 +510,39 @@ $displayName = $names['en'] ?? 'Unknown';
             <div class="logo-description">
                 <div class="logo">
                     <div class="img">
-                        <img src="../images/logo.png" alt="">
+                        <img src="images/final_logo.png" alt="" />
                     </div>
                     <div class="title">
-                        <h4>Bookie</h4>
-                        <small>Book Store Website</small>
+                        <h4>LIBRARY</h4>
+                        <small>UNISAN CAMPUS</small>
                     </div>
                 </div>
                 <div class="logo-body">
-                    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Magnam voluptates eius quasi reiciendis
-                        recusandae provident veritatis sequi, dolores architecto dolor possimus quos</p>
-                </div>
-                <div class="social-links">
-                    <h4>Follow Us</h4>
-                    <ul class="links">
-                        <li><a href=""><i class="fa-brands fa-facebook-f"></i></a></li>
-                        <li><a href=""><i class="fa-brands fa-youtube"></i></a></li>
-                        <li><a href=""><i class="fa-brands fa-twitter"></i></a></li>
-                        <li><a href=""><i class="fa-brands fa-linkedin"></i></a></li>
-                        <li><a href=""><i class="fa-brands fa-instagram"></i></a></li>
-                    </ul>
+                    <p>
+                        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Magnam
+                        voluptates eius quasi reiciendis recusandae provident veritatis
+                        sequi, dolores architecto dolor possimus quos
+                    </p>
                 </div>
             </div>
-            <div class="categories list">
-                <h4>Book Categories</h4>
-                <ul>
-                    <li><a href="">Action</a></li>
-                    <li><a href="">Adventure</a></li>
-                    <li><a href="">Comedy</a></li>
-                    <li><a href="">Crime</a></li>
-                    <li><a href="">Drama</a></li>
-                    <li><a href="">Fantasy</a></li>
-                    <li><a href="">Horror</a></li>
-                </ul>
-            </div>
-            <div class="quick-links list">
-                <h4>Quick Links</h4>
-                <ul>
-                    <li><a href="../index.html">About Us</a></li>
-                    <li><a href="contact.html">Contact Us</a></li>
-                    <li><a href="book-filter.html">Products</a></li>
-                    <li><a href="login.html">Login</a></li>
-                    <li><a href="registration.html">Sign Up</a></li>
-                    <li><a href="cart-item.html">Cart</a></li>
-                    <li><a href="checkout.html">Checkout</a></li>
-                </ul>
-            </div>
-            <div class="our-store list">
 
+            <div class="our-store list">
+                <h4>PUP UNISAN LIBRARY</h4>
                 <ul>
-                    <li><a href=""><i class="fa-solid fa-phone"></i>+12 1345678991</a></li>
-                    <li><a href=""><i class="fa-solid fa-envelope"></i>support@bookoe.id</a></li>
+                    <li>
+                        <a href=""><i class="fa-solid fa-location-dot"></i>Brgy. Kalilayan Unisan, Quezon
+                    </li>
+                    <li>
+                        <a href=""><i class="fa-solid fa-phone"></i>+63 1123456781</a>
+                    </li>
+                    <li>
+                        <a href=""><i class="fa-solid fa-envelope"></i>pupunisanlibrary@gmail.com</a>
+                    </li>
                 </ul>
             </div>
         </div>
     </footer>
+
     <button class="back-to-top"><i class="fa-solid fa-chevron-up"></i></button>
 
     <script>
