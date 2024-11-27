@@ -76,11 +76,14 @@ class eBooks extends Model
             }
         });
     }
-    // In eBooks model
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
     public function tags()
     {
         return $this->morphToMany(Tag::class, 'taggable')->withPivot('deleted_at');
-    }    
+    }
 
     // In Tag model
     public function eBooks()
@@ -121,7 +124,7 @@ class eBooks extends Model
     {
         return $this->morphToMany(Tag::class, 'taggable');
     }
-    
+
     public function reviews()
     {
         return $this->hasMany(Review::class, 'e_book_id'); // Adjust the foreign key if necessary

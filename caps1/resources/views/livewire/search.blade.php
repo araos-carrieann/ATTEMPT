@@ -14,7 +14,7 @@
                         <i id="left" class="fa-solid fa-angle-left cursor-pointer"></i>
                         <i id="right" class="fa-solid fa-angle-right cursor-pointer"></i>
                     </div>
-                </div>
+                </div> 
 
                 <div class="book-container mt-2 px-3">
                     <div class="wrapper">
@@ -24,7 +24,7 @@
                                     <div class="img">
                                         <a href="{{ route('ebooks.detail', $ebook['id']) }}">
                                             <img src="{{ Storage::url($ebook['book_cover']) }}" alt="{{ $ebook['title'] }}"
-                                                style="height: 200px; object-fit: cover;" />
+                                            style="height: 200px; width:150px" >
                                         </a>
                                     </div>
                                     <div class="p-2">

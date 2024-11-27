@@ -20,39 +20,37 @@ class ReadingListController extends Controller
 
         $limit = 1; // Adjust the limit as needed
 
-        if ($readingListCount >= $limit) {
-            Log::info("Limit reached");
-
-            // Set the session flag to trigger the modal
-            session()->flash('triggerModal', true);
-            return response()->json(['success' => false, 'message' => 'Reading list limit reached.']);
-        }
         // Check if the eBook already exists for this user in the reading list
         $list = ReadingList::withTrashed()->where('user_id', $user_id)->where('e_book_id', $e_book_id)->first();
 
-        if ($list) {
-            if ($list->trashed()) {
-                // If the eBook is soft-deleted, restore it
-                $list->restore();
-                Log::info("Restored eBook ID: $e_book_id to the reading list.");
-                return response()->json(['message' => 'Restored to the reading list!'], 200);
+        if (!$list || $list->trashed()) {
+            if ($readingListCount >= $limit) {
+                Log::info("Limit reached");
+                // Set the session flag to trigger the modal
+                session()->flash('triggerModal', true);
+                return response()->json(['message' => 'Not allowed'], 403); // Forbidden
             } else {
-                // If it exists and is not soft-deleted, soft delete it
-                $list->delete();
-                Log::info("Removed eBook ID: $e_book_id from the reading list.");
-                return response()->json(['message' => 'Removed from the reading list!'], 200);
+                if ($list->trashed()) {
+                    // If the eBook is soft-deleted, restore it
+                    $list->restore();
+                    Log::info("Restored eBook ID: $e_book_id to the reading list.");
+                    return response()->json(['message' => 'Restored to the reading list!'], 200);
+                } else {
+                    // If not already in the list, create a new reading list entry
+                    ReadingList::create([
+                        'user_id' => $user_id,
+                        'e_book_id' => $e_book_id,
+                    ]);
+                    Log::info("Added eBook ID: $e_book_id to the reading list.");
+                    return response()->json(['message' => 'Added to the reading list!'], 200);
+                }
             }
-        } else {
-            // If not already in the list, create a new reading list entry
-            ReadingList::create([
-                'user_id' => $user_id,
-                'e_book_id' => $e_book_id,
-            ]);
-            Log::info("Added eBook ID: $e_book_id to the reading list.");
-            return response()->json(['message' => 'Added to the reading list!'], 200);
         }
+            // If it exists and is not soft-deleted, soft delete it
+            $list->delete();
+            Log::info("Removed eBook ID: $e_book_id from the reading list.");
+            return response()->json(['message' => 'Removed from the reading list!'], 200);
     }
-
 
 
     public function checkReadingListStatus($e_book_id)

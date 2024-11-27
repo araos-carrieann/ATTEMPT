@@ -207,7 +207,6 @@
                 <div class="review">
                     <div class="rating">
                         <div class="star">
-
                             <div class="stars">
                                 @for ($i = 1; $i <= 5; $i++)
                                     @if ($i <= floor($computed_rating))
@@ -221,7 +220,6 @@
                                 <small><span>{{ number_format($computed_rating, 1) }}</span> out of 5</small>
                             </div>
                         </div>
-
                     </div>
                     <div class="comment-like">
                         <small><i class="fa-solid fa-comments" style="color: #800000;"></i></i>
@@ -263,7 +261,7 @@
                     </x-modal>
                     @auth
                         <!-- User is authenticated, direct to route -->
-                        <form action="{{ route('ebooks.read', ['id' => $ebook_data->id]) }}" method="GET">
+                        <form action="{{ route('ebooks.read', ['slug' => $ebook_data->slug]) }}" method="GET">
                             <button type="submit" class="cartbtn">
                                 <i class="fa-solid fa-book-open"></i> Read
                             </button>
@@ -359,7 +357,8 @@ $displayName = $names['en'] ?? 'Unknown';
                     <div class="reviewer-container">
                         <div class="reviews">
                             <div class="img-detail">
-                                <img src="../images/man1.png" alt="">
+                                <i class="fa-solid fa-circle-user" style="font-size: 38px;"></i>
+
                                 <div class="name">
                                     <h5>{{ $review->user->username }}</h5>
                                     <small>{{ $review->created_at->format('F j, Y') }}</small>
@@ -419,7 +418,7 @@ $displayName = $names['en'] ?? 'Unknown';
     </section>
 
 
-    @if ($recommInBookInfo->isNotEmpty()))
+    @if ($recommInBookInfo->isNotEmpty())
         <section class="book-set">
             <div class="heading">
                 <h4>Books Recommended</h4>
@@ -435,7 +434,6 @@ $displayName = $names['en'] ?? 'Unknown';
                             <li class="card">
                                 <div class="img">
                                     <img src="{{ Storage::url($ebook->book_cover) }}" />
-
                                 </div>
                                 <h5>{{ $ebook->title }}</h5>
                                 <div class="genre">
@@ -504,6 +502,28 @@ $displayName = $names['en'] ?? 'Unknown';
         </div>
     </section>
 
+    @if (session('info'))
+        <!-- Modal HTML Structure -->
+        <div x-data="{ open: true }" x-init="if ($store.modal.open) open = true" x-show="open" @click.away="open = false"
+            class="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-75 z-50">
+            <div class="bg-white rounded-lg shadow-lg p-6 max-w-sm w-full z-50">
+                <!-- Modal Header -->
+                <div class="flex justify-between items-center">
+                    <h3 class="text-xl font-semibold">Notice</h3>
+                    <button @click="open = false" class="text-gray-500">&times;</button>
+                </div>
+                <!-- Modal Body -->
+                <div class="mt-4">
+                    <p>{{ session('info') }}</p>
+                </div>
+                <!-- Modal Footer -->
+                <div class="mt-4 text-right">
+                    <button @click="open = false" style="background-color: #800000"
+                        class=" text-white px-4 py-2 rounded">Close</button>
+                </div>
+            </div>
+        </div>
+    @endif
 
     <footer>
         <div class="container">
@@ -542,10 +562,35 @@ $displayName = $names['en'] ?? 'Unknown';
             </div>
         </div>
     </footer>
+<!-- Modal HTML -->
+<div id="limitModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+    <div class="bg-white rounded-lg shadow-lg p-6 max-w-sm w-full ">
+        <h2 class="text-xl font-semibold mb-4 text-center">Limit Reached</h2>
+        <p style="margin: 20px" class="mb-6">You have reached the limit of adding eBooks in your Reading List.</p>
+        <button onclick="closeModal()" style="background-color: #800000; margin-left: 250px;" class="px-4 py-2 text-white rounded">Close</button>
+    </div>
+</div>
 
     <button class="back-to-top"><i class="fa-solid fa-chevron-up"></i></button>
 
     <script>
+function openModal() {
+    const modal = document.getElementById('limitModal');
+    if (modal) {
+        modal.classList.remove('hidden');
+    } else {
+        console.error("Modal element not found!");
+    }
+}
+
+function closeModal() {
+    const modal = document.getElementById('limitModal');
+    if (modal) {
+        modal.classList.add('hidden');
+    }
+}
+
+
         const tabbtn = document.querySelectorAll(".tablink");
         for (let i = 0; i < tabbtn.length; i++) {
             tabbtn[i].addEventListener('click', () => {
@@ -617,10 +662,9 @@ $displayName = $names['en'] ?? 'Unknown';
 
             // Click event to add/remove from reading list
             listButton.addEventListener("click", () => {
-                listButton.classList.toggle("in-list"); // Toggle "in-list" UI feedback
-
                 const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
+                // Send the request to add/remove from reading list
                 fetch(`/reading-list/${eBookId}`, {
                         method: 'POST',
                         headers: {
@@ -629,14 +673,33 @@ $displayName = $names['en'] ?? 'Unknown';
                         }
                     })
                     .then(response => {
-                        if (response.ok) {
-                            console.log("Updated reading list!");
-                        } else {
-                            return Promise.reject("Failed to update");
+                        if (!response.ok) {
+                            // Handle non-success responses
+                            if (response.status === 403) {
+                                // If forbidden (e.g., user doesn't have permission)
+                                console.log(
+                                    "You are not allowed to add this eBook to your reading list.");
+                                    openModal(); // Call modal open function
+                                return Promise.reject("Failed to update: Unauthorized");
+                            } else {
+                                // For other non-success statuses, you can handle accordingly
+                                console.log("Failed to update reading list!");
+                                return Promise.reject("Failed to update: " + response.statusText);
+                            }
                         }
+
+                        // If the request was successful, update the UI
+                        listButton.classList.toggle("in-list"); // Toggle "in-list" UI feedback
+                        console.log("Updated reading list!");
                     })
-                    .catch(error => console.error("Error:", error));
+                    .catch(error => {
+                        // Handle errors
+                        console.error("Error:", error);
+                        // Optionally, revert the UI state if the operation fails
+                        listButton.classList.remove("in-list"); // Remove the class if there's an error
+                    });
             });
+
         });
     </script>
 

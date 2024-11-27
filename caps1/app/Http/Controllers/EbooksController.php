@@ -129,7 +129,7 @@ class EbooksController extends Controller
                 ->with('eBook.subcategories')
                 ->inRandomOrder()
                 ->first();
-               
+
 
             // Generate personalized recommendations based on the pick
             if ($pickReco) {
@@ -137,10 +137,10 @@ class EbooksController extends Controller
                 $relatedEbooks = eBooks::whereHas('subcategories', function ($query) use ($subcategory) {
                     $query->where('subcategory_id', $subcategory->id);
                 })
-                // ->where('id', '!=', $pickReco->id) // Exclude the last viewed eBook
+                    // ->where('id', '!=', $pickReco->id) // Exclude the last viewed eBook
                     ->inRandomOrder()
                     ->get();
-                   
+
                 $readingFavRecommendation = $relatedEbooks;
             }
         }
@@ -182,7 +182,8 @@ class EbooksController extends Controller
             'lastViewedBookName',
             'lastviewed_recommendations',
             'readingListFavRecommendations',
-            'number_of_user', 'number_of_ebooks'
+            'number_of_user',
+            'number_of_ebooks'
         ));
     }
 
@@ -191,9 +192,22 @@ class EbooksController extends Controller
 
     public function showInterestForm()
     {
-        $subcategories = Subcategory::all();
-        return view('user_ui.select-interests', compact('subcategories'));
+        $id = Auth::user()->id;
+    
+        // Check if the user already has interests
+        if (UserInterest::where('user_id', $id)->doesntExist()) {
+            // Get all subcategories if no interests are found
+            $subcategories = Subcategory::all();
+            
+            // Return the form view with subcategories
+            return view('user_ui.select-interests', compact('subcategories'));
+        } else {
+            // Redirect back if the user already has interests
+            // You can also use a specific route or message here if needed
+            return redirect()->route('welcome')->with('info', 'You have already selected your interests.');
+        }
     }
+    
 
 
     public function storeInterests(Request $request)
@@ -219,8 +233,14 @@ class EbooksController extends Controller
     }
 
 
-    public function books_info($id)
+    public function books_info($slug)
     {
+        // Find the eBook by slug
+        $ebook = eBooks::where('slug', $slug)->firstOrFail();
+
+        // Retrieve the ID if you need it
+        $id = $ebook->id;
+
         $number_of_favorites = Favorites::where('e_book_id', $id)->count();
 
         // Get all reviews for the eBook
@@ -246,38 +266,43 @@ class EbooksController extends Controller
     {
         // Initialize an empty collection to hold the recommendations
         $recoBookInfo = collect();
-    
+
         // Fetch the ebook by ID
         $openedEbook = eBooks::find($id);
-    
+
         // If the ebook is found, proceed
         if ($openedEbook) {
             // Assuming you have a relationship called 'subcategories' on the eBooks model
             $subcategory = $openedEbook->subcategories->first(); // Get the first subcategory
-    
+
             // If the ebook has a subcategory, fetch related ebooks based on the subcategory
             if ($subcategory) {
                 $relatedEbooks = eBooks::whereHas('subcategories', function ($query) use ($subcategory) {
                     $query->where('subcategory_id', $subcategory->id);
                 })
-                ->where('id', '!=', $openedEbook->id)  // Exclude the current ebook
-                ->inRandomOrder()
-                ->get();
-    
+                    ->where('id', '!=', $openedEbook->id)  // Exclude the current ebook
+                    ->inRandomOrder()
+                    ->get();
+
                 // Store the related ebooks in the collection
                 $recoBookInfo = $relatedEbooks;
             }
         }
-    
+
         // Return the recommendations
         return $recoBookInfo;
     }
-    
 
-    public function read($id)
+
+    public function read($slug)
     {
 
         if (Auth::user()) {
+            // Find the eBook by slug
+            $ebook = eBooks::where('slug', $slug)->firstOrFail();
+
+            // Retrieve the ID if you need it
+            $id = $ebook->id;
 
             $this->user_views($id);
             // Fetch the eBook

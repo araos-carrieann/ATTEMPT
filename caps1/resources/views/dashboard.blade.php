@@ -23,8 +23,8 @@
                         @foreach ($ebookList as $ebook)
                             <div class="book-card">
                                 <div class="img">
-                                    <a href="book-detail.html"><img src="{{ Storage::url($ebook->book_cover) }}"
-                                            alt="" /></a>
+                                    <a href="{{ route('ebooks.read', $ebook->id) }}">
+                                        <img src="{{ Storage::url($ebook->book_cover) }}" alt="" /></a>
                                     <button class="reading-list" id="listbtn" data-id="{{ $ebook->id }}">
                                         <i class="fa-regular fa-bookmark"></i>
                                     </button>
@@ -44,31 +44,31 @@
 
     {{-- For Favorites --}}
     @if (request()->routeIs('userFavorite'))
-    <section class="filter">
-        <div class="book-grid-container">
-            <div class="book-collections">
-                <h4>Books</h4>
-                <div class="books">
-                    @foreach ($favList as $ebook)
-                        <div class="book-card">
-                            <div class="img">
-                                <a href="book-detail.html"><img src="{{ Storage::url($ebook->book_cover) }}"
-                                        alt="" /></a>
-                                <button class="reading-list" id="listbtn" data-id="{{ $ebook->id }}">
-                                    <i class="fa-regular fa-bookmark"></i>
-                                </button>
+        <section class="filter">
+            <div class="book-grid-container">
+                <div class="book-collections">
+                    <h4>Books</h4>
+                    <div class="books">
+                        @foreach ($favList as $ebook)
+                            <div class="book-card">
+                                <div class="img">
+                                    <a href="{{ route('ebooks.read', $ebook->id) }}">
+                                        <img src="{{ Storage::url($ebook->book_cover) }}" alt="" /></a>
+                                    <button class="liked" id="listbtn" data-id="{{ $ebook->id }}">
+                                        <i class="fa-regular fa-heart"></i>
+                                    </button>
+                                </div>
+                                <h5>{{ $ebook->title }}</h5>
+                                @if ($ebook->subcategories->isNotEmpty())
+                                    <small>{{ $ebook->subcategories->first()->name }}</small>
+                                @endif
                             </div>
-                            <h5>{{ $ebook->title }}</h5>
-                            @if ($ebook->subcategories->isNotEmpty())
-                                <small>{{ $ebook->subcategories->first()->name }}</small>
-                            @endif
-                        </div>
-                    @endforeach
+                        @endforeach
+                    </div>
                 </div>
             </div>
-        </div>
-        </div>
-    </section>
+            </div>
+        </section>
     @endif
 
 

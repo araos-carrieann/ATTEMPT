@@ -529,9 +529,10 @@
     margin-top: 1rem;
   }
   .arrowbtn {
-    display: flex;            /* Ensure it's a flex container */
-    justify-content: flex-end; /* Align elements to the right */
-    gap: 2rem;                /* Add spacing between elements */
+    display: flex;          
+    justify-content: flex-end; 
+    gap: 2rem;  
+    padding-top: 8px;            
 }
 
   .book-set .arrowbtn i{
@@ -611,6 +612,7 @@
     margin-top: 0.6rem;
     justify-content: space-between;
     align-items: center;
+    padding-bottom: 8px;
   }
   .carousel .card .footer .star{
     font-size: 11px;
@@ -646,7 +648,7 @@
     overflow: hidden;
     position: relative;
     z-index: 1;
-    padding: 25px;
+
   }
   .feature .main{
     display: flex;

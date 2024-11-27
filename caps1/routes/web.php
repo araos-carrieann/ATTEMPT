@@ -53,6 +53,7 @@ Route::get('/customnotif', function () {
     
 })->name('customnotif');
 
+
 Route::get('/decide', [EbooksController::class, 'routedecider'])->name('decide');
 
 Route::get('/custom-page', [EbooksController::class, 'index'])->name('custom.page.route');
@@ -64,8 +65,9 @@ Route::get('/userFav', [FavoritesController::class, 'userFavoriteList'])->name('
 
 Route::get('/status', [UserController::class, 'show'])->name('user_ui.status');
 
-Route::get('/ebooks/read/{id}', [EbooksController::class, 'read'])->name('ebooks.read');
-Route::get('/ebooks/{id}', [EbooksController::class, 'books_info'])->name('ebooks.detail');
+Route::get('/ebooks/read/{slug}', [EbooksController::class, 'read'])->name('ebooks.read');
+
+Route::get('/ebooks/{slug}', [EbooksController::class, 'books_info'])->name('ebooks.detail');
 Route::post('/reviews/store', [EbooksController::class, 'storeReviews'])->name('storeRev');
 Route::middleware('auth')->group(function () {
     Route::get('/navigation', [Controller::class, 'index']);
@@ -84,6 +86,8 @@ Route::post('/save-last-read-page', [ReadingProgressController::class, 'store'])
 Route::post('/ebooks/favorite/{id}', [FavoritesController::class, 'addToFavorites'])->name('ebooks.favorite');
 Route::get('/ebooks/favorite/status/{id}', [FavoritesController::class, 'checkFavoriteStatus'])->name('ebooks.favorite.status');
 
+
+Route::get('/modal', [ReadingListController::class,'modal'])->name('modal');
 Route::post('/reading-list/{e_book_id}', [ReadingListController::class, 'addToReadingList'])->name('reading.list.add'); // Add or toggle eBook in reading list
     Route::get('/reading-list/status/{e_book_id}', [ReadingListController::class, 'checkReadingListStatus'])->name('reading.list.status'); // Check if eBook is in reading list
 
@@ -98,3 +102,4 @@ Route::view('profile', 'profile')
         return redirect()->route('welcome'); 
     });
 require __DIR__ . '/auth.php';
+ 
