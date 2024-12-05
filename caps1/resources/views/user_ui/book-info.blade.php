@@ -563,7 +563,7 @@ $displayName = $names['en'] ?? 'Unknown';
         </div>
     </footer>
 <!-- Modal HTML -->
-<div id="limitModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+<div id="limitModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 ">
     <div class="bg-white rounded-lg shadow-lg p-6 max-w-sm w-full ">
         <h2 class="text-xl font-semibold mb-4 text-center">Limit Reached</h2>
         <p style="margin: 20px" class="mb-6">You have reached the limit of adding eBooks in your Reading List.</p>

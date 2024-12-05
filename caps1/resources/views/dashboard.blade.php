@@ -5,7 +5,7 @@
         </h2>
     </x-slot>
 
-    <div class="py-12">
+    {{-- <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
@@ -13,7 +13,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
     @if (request()->routeIs('userDashboard'))
         <section class="filter">
             <div class="book-grid-container">
@@ -23,7 +23,7 @@
                         @foreach ($ebookList as $ebook)
                             <div class="book-card">
                                 <div class="img">
-                                    <a href="{{ route('ebooks.read', $ebook->id) }}">
+                                    <a href="{{ route('ebooks.read', $ebook->slug) }}">
                                         <img src="{{ Storage::url($ebook->book_cover) }}" alt="" /></a>
                                     <button class="reading-list" id="listbtn" data-id="{{ $ebook->id }}">
                                         <i class="fa-regular fa-bookmark"></i>
@@ -47,12 +47,11 @@
         <section class="filter">
             <div class="book-grid-container">
                 <div class="book-collections">
-                    <h4>Books</h4>
                     <div class="books">
                         @foreach ($favList as $ebook)
                             <div class="book-card">
                                 <div class="img">
-                                    <a href="{{ route('ebooks.read', $ebook->id) }}">
+                                    <a href="{{ route('ebooks.read', $ebook->slug) }}">
                                         <img src="{{ Storage::url($ebook->book_cover) }}" alt="" /></a>
                                     <button class="liked" id="listbtn" data-id="{{ $ebook->id }}">
                                         <i class="fa-regular fa-heart"></i>
